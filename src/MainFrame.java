@@ -672,7 +672,7 @@ public class MainFrame extends JFrame {
 			spinnerDate=null;
 			getValues();
 			if(checkDate(day, month, year)){
-				
+				 
 				progressBar.setVisible(true);
 				calculateLbl.setVisible(true);	
 				gifLabel.setVisible(true);
@@ -845,6 +845,7 @@ public class MainFrame extends JFrame {
 			public Void doInBackground() throws Exception{
 				
 				calculate();
+				
 
 				return null;
 			}
@@ -874,28 +875,31 @@ public class MainFrame extends JFrame {
 				//System.out.println(d+ " PFFF");
 				
 				
-				Calendar calendar = new GregorianCalendar();
+				GregorianCalendar calendar = new GregorianCalendar();
 				//calendar.setTime(d);
-				calendar.set(spinnerDate.getYear(), spinnerDate.getMonthValue()-1, spinnerDate.getDayOfMonth());
-				
+				calendar.set(spinnerDate.getYear(), spinnerDate.getMonthValue(), spinnerDate.getDayOfMonth());
 				System.out.println("Year " + calendar.get(Calendar.YEAR) + " Month " + calendar.get(Calendar.MONTH) + " Date " + calendar.get(Calendar.DAY_OF_MONTH));
 
 				c = new Converter(calendar);
 				
 				long x = 0,y = 0;			
-				
 				if(before && spinnerDate.isAfter(date1)){
 					
 					x = c.cal_to_jd();
-					//c.fix(date1);
-					calendar.clear();
 					
-					/*Calendar tempCalendar = new GregorianCalendar();
-					calendar.setTime(date1);
-					Converter cTemp = new Converter(tempCalendar);*/
 					
-					long xTemp = c.cal_to_jd();
+					GregorianCalendar temp = new GregorianCalendar();
+					temp.set(date1.getYear(), date1.getMonthValue(), date1.getDayOfMonth());
+					Converter c2 = new Converter(temp);
+					
+					
+					
+					long xTemp = c2.cal_to_jd();
+					c.print();
+					c2.print();
 					y =Math.abs(xTemp - x);
+					
+					temp=null;
 				}
 				else if(before && spinnerDate.compareTo(date1) == 0){
 					y = 0;

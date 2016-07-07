@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -28,15 +29,17 @@ public class Converter {
 
 	}
 	
+	public void print(){
+		
+		System.out.println("era " + era);
+		System.out.println("y " + y);
+		System.out.println("m " + m);
+		System.out.println("d " + d);
+	}
+	
 	
 
-	/*public void fix(Date fixedDate){
-		c.setTime(fixedDate);
-		era = c.get(Calendar.ERA);
-		y = c.get(Calendar.YEAR);
-		m  = c.get(Calendar.MONTH);
-		d = c.get(Calendar.DAY_OF_MONTH);
-	}*/
+	
 
 
 
