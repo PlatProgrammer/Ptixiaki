@@ -709,6 +709,7 @@ public class MainFrame extends JFrame {
 		getContentPane().setLayout(groupLayout);
 		
 		getRootPane().setDefaultButton(btnNewDate);
+		
 
 		setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
