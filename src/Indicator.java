@@ -84,7 +84,7 @@ public class Indicator {
 			System.out.println("RESULT" + result);
 		}
 		//int intResult = (int) Math.ceil(result);
-		int intResult = (int) Math.floor(result);
+		int intResult = (int) Math.floor(result) ;
 		
 		intResult = (intResult%value)+1;
 		
