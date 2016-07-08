@@ -101,34 +101,6 @@ public class Converter {
 
 	}
 	
-	
-	public long military(int year,int month,int day){
-		int K,I,J;
-		long JD;
-		I= year;
-		J= month;
-		K= day;
-		
-		JD= K-32075+1461*(I+4800+(J-14)/12)/4+367*(J-2-(J-14)/12*12)*2/12-3*((I+4900+(J-14)/12)/100)/4;
-		
-		return JD;
-		
-	}
-	
-	public long military2(int year,int month,int day){
-			int Y = year;
-			int M = month;
-			int D = day;
-			int	A = Y/100;
-			int  B = A/4;
-			int C = 2-A+B;
-			int  E = (int) (365.25*(Y+4716));
-			int  F = (int) (30.6001*(M+1));
-			long  JD= (long) (C+D+E+F-1524.5);
-				 
-				 return JD;
-	}
-
 
 	public static long getCallibration() {
 		return callibration;

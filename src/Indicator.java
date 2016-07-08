@@ -11,6 +11,12 @@ public class Indicator {
 	private static final double  cycle= 360;
 
 	private final int value;
+	
+	
+	public void test(){
+		//System.out.println(name + degree);
+		System.out.println(name + degreeTotal);
+	}
 
 
 
@@ -49,7 +55,7 @@ public class Indicator {
 		degreeTotal +=d;
 		degree = (double) degree  % MAX_DEGREES;
 		normal_degree = (double) degree  % cycle;
-		reel = (int) (degree / cycle);
+		reel = (int) (degree / cycle); 
 
 	}
 
@@ -69,16 +75,22 @@ public class Indicator {
 	}
 
 	public int setResult(){
-		double mam = cycle / ( value/reels); // mam = moires ana moina
+		double mam = cycle / (  (double) value/reels); // mam = moires ana sinodiko mina*
+		
+		
 		
 		double result = degreeTotal / mam;
+		if(this.name=="saros" ){
+			System.out.println("RESULT" + result);
+		}
+		//int intResult = (int) Math.ceil(result);
+		int intResult = (int) Math.floor(result);
 		
-		int intResult = (int) Math.ceil(result);
-		
-		intResult = (intResult%value) +1;
+		intResult = (intResult%value)+1;
 		
 		
 		return intResult;
+		
 	}
 
 

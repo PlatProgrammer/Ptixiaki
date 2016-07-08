@@ -177,17 +177,20 @@ public class MainFrame extends JFrame {
 		JPanel panel_3 = new JPanel();
 
 		daySpinner = new JSpinner();
-		daySpinner.setModel(new SpinnerNumberModel(today.getDayOfMonth(), 1, 31, 1));
+		//daySpinner.setModel(new SpinnerNumberModel(today.getDayOfMonth(), 1, 31, 1));
+		daySpinner.setModel(new SpinnerNumberModel(12, 1, 31, 1));
 
 		monthSpinner = new JSpinner();
 		monthSpinner.setModel(new SpinnerNumberModel(today.getMonthValue(), 1, 12, 1));
+		monthSpinner.setModel(new SpinnerNumberModel(5, 1, 12, 1));
 
 		yearSpinner = new JSpinner();
 		JSpinner.NumberEditor editor = new JSpinner.NumberEditor(yearSpinner);
 		editor.getFormat().setGroupingUsed(false);
 		yearSpinner.setEditor(editor);
 		yearSpinner.setModel(new SpinnerNumberModel(0, new Integer(-205), null,1));
-		yearSpinner.setValue(today.getYear());
+		//yearSpinner.setValue(today.getYear());
+		yearSpinner.setValue(-204);
 
 
 
@@ -693,7 +696,7 @@ public class MainFrame extends JFrame {
 			}
 			else{
 				JOptionPane.showMessageDialog(null,
-						"Wrong Date",
+						"wrong date",
 						"Error",
 						JOptionPane.ERROR_MESSAGE);
 
@@ -713,15 +716,18 @@ public class MainFrame extends JFrame {
 
 		public boolean checkDate(int day,int month,int year){
 			boolean good = true;
+			String error;
 			if(year==0){
 				System.out.println("No year 0");
+				error = "No year 0";
 				good = false;
 
 			}
 			else{			
 
 				if(year == 1582 && month ==10 && (day>=5 && day<=14)){
-					System.out.println("Wrong Datee");
+					System.out.println("no 1582");
+					error = "no 1582";
 					good = false;
 				}
 				else{
@@ -825,10 +831,14 @@ public class MainFrame extends JFrame {
 			metonicText.setText(Integer.toString(indicators.get("metonic").setResult()));
 			sarosText.setText(Integer.toString(indicators.get("saros").setResult()));
 			exeligmosText.setText(Integer.toString(indicators.get("exeligmos").setResult()));
+			
+			
 
+			/*indicators.get("saros").test();
+			indicators.get("metonic").test();*/
 
 			gifLabel.setIcon(null);
-			gifLabel.setText("Set for date");
+			gifLabel.setText("Set date");
 
 
 
