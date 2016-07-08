@@ -4,6 +4,9 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
@@ -29,8 +32,10 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.border.BevelBorder;
+import javax.swing.text.JTextComponent;
 
 
 
@@ -73,9 +78,17 @@ public class MainFrame extends JFrame {
 
 	private LocalDate today,spinnerDate,date1;
 	private int day,month,year;
+	private JLabel monthLbl;
+	private JLabel lblMonth;
+	private JLabel yearLbl;
 
 
 	public MainFrame(Converter c,final HashMap<String,Gear> gears, final HashMap<String,Indicator> indicators) {
+
+		URL iconURL = getClass().getResource("/icon.png");
+		ImageIcon icon = new ImageIcon(iconURL);
+		setIconImage(icon.getImage());
+
 
 		this.c=c;
 		//setResizable(false);
@@ -192,6 +205,12 @@ public class MainFrame extends JFrame {
 		//yearSpinner.setValue(today.getYear());
 		yearSpinner.setValue(-204);
 
+		monthLbl = new JLabel("Date");
+
+		lblMonth = new JLabel("Month");
+
+		yearLbl = new JLabel("Year");
+
 
 
 
@@ -203,7 +222,7 @@ public class MainFrame extends JFrame {
 
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
 		gl_panel_2.setHorizontalGroup(
-				gl_panel_2.createParallelGroup(Alignment.TRAILING)
+				gl_panel_2.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_2.createSequentialGroup()
 						.addGap(95)
 						.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 228, GroupLayout.PREFERRED_SIZE)
@@ -216,25 +235,45 @@ public class MainFrame extends JFrame {
 						.addContainerGap(163, Short.MAX_VALUE)
 						.addComponent(calculateLbl)
 						.addGap(164))
-				.addGroup(Alignment.LEADING, gl_panel_2.createSequentialGroup()
-						.addGap(107)
-						.addComponent(daySpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addGap(42)
-						.addComponent(monthSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addGap(44)
-						.addComponent(yearSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addContainerGap(129, Short.MAX_VALUE))
+				.addGroup(gl_panel_2.createSequentialGroup()
+						.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel_2.createSequentialGroup()
+										.addGap(109)
+										.addComponent(monthLbl)
+										.addPreferredGap(ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+										.addComponent(lblMonth))
+								.addGroup(gl_panel_2.createSequentialGroup()
+										.addGap(101)
+										.addComponent(daySpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+										.addComponent(monthSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel_2.createSequentialGroup()
+										.addGap(32)
+										.addComponent(yearSpinner, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_panel_2.createSequentialGroup()
+										.addGap(45)
+										.addComponent(yearLbl)))
+						.addContainerGap(95, Short.MAX_VALUE))
 				);
 		gl_panel_2.setVerticalGroup(
 				gl_panel_2.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_2.createSequentialGroup()
-						.addGap(23)
-						.addGroup(gl_panel_2.createParallelGroup(Alignment.BASELINE)
-								.addComponent(daySpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(monthSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(yearSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addGap(24)
-						.addComponent(calculateLbl)
+						.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel_2.createSequentialGroup()
+										.addGap(67)
+										.addComponent(calculateLbl))
+								.addGroup(gl_panel_2.createSequentialGroup()
+										.addContainerGap()
+										.addGroup(gl_panel_2.createParallelGroup(Alignment.BASELINE)
+												.addComponent(monthLbl, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+												.addComponent(lblMonth)
+												.addComponent(yearLbl))
+										.addPreferredGap(ComponentPlacement.RELATED)
+										.addGroup(gl_panel_2.createParallelGroup(Alignment.BASELINE)
+												.addComponent(daySpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												.addComponent(monthSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												.addComponent(yearSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 						.addPreferredGap(ComponentPlacement.UNRELATED)
 						.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
 						.addGap(18)
@@ -268,10 +307,14 @@ public class MainFrame extends JFrame {
 
 		callipicLabel = new JLabel("callipic");
 		exeligmosText = new JTextArea();
+		exeligmosText.setEditable(false);
 		sarosText = new JTextArea();
+		sarosText.setEditable(false);
 		metonicText = new JTextArea();
+		metonicText.setEditable(false);
 
 		callipicText = new JTextArea();
+		callipicText.setEditable(false);
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
 		gl_panel_1.setHorizontalGroup(
 				gl_panel_1.createParallelGroup(Alignment.LEADING)
@@ -334,12 +377,19 @@ public class MainFrame extends JFrame {
 		d2label = new JLabel("d2");
 
 		b1text = new JTextArea();
+		b1text.setEditable(false);
 		b2text = new JTextArea();
+		b2text.setEditable(false);
 		b3text = new JTextArea();
+		b3text.setEditable(false);
 		c1text = new JTextArea();
+		c1text.setEditable(false);
 		c2text = new JTextArea();
+		c2text.setEditable(false);
 		d1text = new JTextArea();
+		d1text.setEditable(false);
 		d2text = new JTextArea();
+		d2text.setEditable(false);
 		e1label = new JLabel("e1");
 		e2label = new JLabel("e2");
 		e3label = new JLabel("e3");
@@ -348,12 +398,19 @@ public class MainFrame extends JFrame {
 		e6label = new JLabel("e6");
 		f1label = new JLabel("f1");
 		e1text = new JTextArea();
+		e1text.setEditable(false);
 		e2text = new JTextArea();
+		e2text.setEditable(false);
 		e3text = new JTextArea();
+		e3text.setEditable(false);
 		e4text = new JTextArea();
+		e4text.setEditable(false);
 		e5text = new JTextArea();
+		e5text.setEditable(false);
 		e6text = new JTextArea();
+		e6text.setEditable(false);
 		f1text = new JTextArea();
+		f1text.setEditable(false);
 		f2label = new JLabel("f2");
 		g1label = new JLabel("g1");
 		g2label = new JLabel("g2");
@@ -362,12 +419,19 @@ public class MainFrame extends JFrame {
 		i1label = new JLabel("i1");
 		k1label = new JLabel("k1");
 		g1text = new JTextArea();
+		g1text.setEditable(false);
 		h1text = new JTextArea();
+		h1text.setEditable(false);
 		h2text = new JTextArea();
+		h2text.setEditable(false);
 		i1text = new JTextArea();
+		i1text.setEditable(false);
 		k1text = new JTextArea();
+		k1text.setEditable(false);
 		f2text = new JTextArea();
+		f2text.setEditable(false);
 		g2text = new JTextArea();
+		g2text.setEditable(false);
 		k2label = new JLabel("k2");
 		l1label = new JLabel("l1");
 		l2label = new JLabel("l2");
@@ -376,20 +440,31 @@ public class MainFrame extends JFrame {
 		m3label = new JLabel("m3");
 		n1label = new JLabel("n1");
 		k2text = new JTextArea();
+		k2text.setEditable(false);
 		l1text = new JTextArea();
+		l1text.setEditable(false);
 		l2text = new JTextArea();
+		l2text.setEditable(false);
 		m1text = new JTextArea();
+		m1text.setEditable(false);
 		m2text = new JTextArea();
+		m2text.setEditable(false);
 		m3text = new JTextArea();
+		m3text.setEditable(false);
 		n1text = new JTextArea();
+		n1text.setEditable(false);
 		n2label = new JLabel("n2");
 		n2text = new JTextArea();
+		n2text.setEditable(false);
 		o1label = new JLabel("o1");
 		o1text = new JTextArea();
+		o1text.setEditable(false);
 		p1label = new JLabel("p1");
 		p1text = new JTextArea();
+		p1text.setEditable(false);
 		p2label = new JLabel("p2");
 		p2text = new JTextArea();
+		p2text.setEditable(false);
 		spinner_1 = new JSpinner();
 		SpinnerDateModel dateModel = new SpinnerDateModel(now, null, null , Calendar.DAY_OF_YEAR);
 		spinner_1.setModel(dateModel);
@@ -632,9 +707,10 @@ public class MainFrame extends JFrame {
 		gl_panel.linkSize(SwingConstants.HORIZONTAL, new Component[] {b1text, b2text, b3text, c1text, c2text, d1text, d2text, e1text, e2text, e3text, e4text, e5text, e6text, f1text, g1text, h1text, h2text, i1text, k1text, f2text, g2text, k2text, l1text, l2text, m1text, m2text, m3text, n1text, n2text, o1text, p1text, p2text});
 		panel.setLayout(gl_panel);
 		getContentPane().setLayout(groupLayout);
+		
+		getRootPane().setDefaultButton(btnNewDate);
 
-
-
+		setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
 
 		this.pack();
@@ -683,7 +759,11 @@ public class MainFrame extends JFrame {
 				gifLabel.setIcon(imageIcon);
 
 				spinnerDate = LocalDate.of(year,month, day);
-				setCursor(Cursor.WAIT_CURSOR);
+				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+
+
+
 
 
 				MyTask task = new MyTask();
@@ -717,31 +797,39 @@ public class MainFrame extends JFrame {
 		public boolean checkDate(int day,int month,int year){
 			boolean good = true;
 			String error;
-			if(year==0){
-				System.out.println("No year 0");
-				error = "No year 0";
+			if(year < - 4712){
+				System.out.println("Too early");
+				error = "Too early";
 				good = false;
-
 			}
-			else{			
-
-				if(year == 1582 && month ==10 && (day>=5 && day<=14)){
-					System.out.println("no 1582");
-					error = "no 1582";
+			else
+			{
+				if(year==0){
+					System.out.println("No year 0");
+					error = "No year 0";
 					good = false;
-				}
-				else{
 
-					if(isLeapYear(year)){
-						if(day>Leap[month-1]){
-							System.out.println("Wrong Datee");
-							good = false;
-						}
+				}
+				else{			
+
+					if(year == 1582 && month ==10 && (day>=5 && day<=14)){
+						System.out.println("no 1582");
+						error = "no 1582";
+						good = false;
 					}
 					else{
-						if(day>noLeap[month-1]){
-							System.out.println("Wrong Date");
-							good = false;
+
+						if(isLeapYear(year)){
+							if(day>Leap[month-1]){
+								System.out.println("Wrong Datee");
+								good = false;
+							}
+						}
+						else{
+							if(day>noLeap[month-1]){
+								System.out.println("Wrong Date");
+								good = false;
+							}
 						}
 					}
 				}
@@ -831,8 +919,8 @@ public class MainFrame extends JFrame {
 			metonicText.setText(Integer.toString(indicators.get("metonic").setResult()));
 			sarosText.setText(Integer.toString(indicators.get("saros").setResult()));
 			exeligmosText.setText(Integer.toString(indicators.get("exeligmos").setResult()));
-			
-			
+
+
 
 			/*indicators.get("saros").test();
 			indicators.get("metonic").test();*/
@@ -869,7 +957,7 @@ public class MainFrame extends JFrame {
 			@Override
 			protected void done() {
 				show();  // this is run on the Swing event thread
-				setCursor(Cursor.getDefaultCursor());
+				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 				calculateLbl.setVisible(false);
 				//gifLabel.setVisible(false);
 				progressBar.setValue(progressBar.getMaximum());
@@ -878,10 +966,10 @@ public class MainFrame extends JFrame {
 			public void calculate(){
 
 
-				
-				
+
+
 				GregorianCalendar calendar = new GregorianCalendar();
-				
+
 				if(spinnerDate.getYear()<0){
 					calendar.set(spinnerDate.getYear()+1, spinnerDate.getMonthValue(), spinnerDate.getDayOfMonth());
 				}
@@ -892,15 +980,15 @@ public class MainFrame extends JFrame {
 
 				c = new Converter(calendar);
 				System.out.println(spinnerDate);
-				
-				
+
+
 				System.out.println("era"+ calendar.get(Calendar.ERA)+"Year " + calendar.get(Calendar.YEAR) + " Month " + calendar.get(Calendar.MONTH) + " Date " + calendar.get(Calendar.DAY_OF_MONTH));
 				long x = 0,y = 0;	
-				
+
 				//System.out.println("OUFF" +c.military2(-204, 5, 12));
 				//y=c.cal_to_jd();
 				//spin_by_days(y);
-				
+
 				if(before && spinnerDate.isAfter(date1)){
 
 					x = c.cal_to_jd();
@@ -913,7 +1001,7 @@ public class MainFrame extends JFrame {
 					else{
 						temp.set(date1.getYear(), date1.getMonthValue(), date1.getDayOfMonth());
 					}
-					
+
 					Converter c2 = new Converter(temp);
 
 
@@ -923,7 +1011,7 @@ public class MainFrame extends JFrame {
 					System.out.println(date1);
 					System.out.println(x);
 					System.out.println(xTemp);
-					
+
 					//c.print();
 					//c2.print();
 					y =Math.abs(xTemp - x);
@@ -945,6 +1033,7 @@ public class MainFrame extends JFrame {
 
 				System.out.println(y);
 				
+				if(y!=0)
 				spin_by_days(y);
 
 
