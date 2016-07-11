@@ -80,9 +80,6 @@ public class Indicator {
 		
 		
 		double result = degreeTotal / mam;
-		if(this.name=="callipic" ){
-			System.out.println("RESULT" + result);
-		}
 		//int intResult = (int) Math.ceil(result);
 		int intResult = (int) Math.floor(result) ;
 		

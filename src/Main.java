@@ -17,14 +17,7 @@ public class Main {
 
 	public static void main(String[] args) {
 
-
-
-
-		LocalDate today = LocalDate.now();
 		
-		Calendar calendar = new GregorianCalendar();
-		calendar.set(today.getYear(), today.getMonthValue()-1, today.getDayOfMonth());
-
 		HashMap<String,Gear> gears = new HashMap<String,Gear>();
 		HashMap<String,Indicator> indicators = new HashMap<String,Indicator>();
 
@@ -37,8 +30,6 @@ public class Main {
 
 		//new InputFrame(converter,gears,indicators);
 		new MainFrame(gears,indicators);
-
-
 
 	}
 

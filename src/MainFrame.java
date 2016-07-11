@@ -675,9 +675,6 @@ public class MainFrame extends JFrame {
 
 		this.pack();
 
-
-		//setExtendedState(MAXIMIZED_BOTH);
-
 		this.setVisible(true);
 
 	}
@@ -725,10 +722,6 @@ public class MainFrame extends JFrame {
 				MyTask task = new MyTask();
 				task.execute();
 				
-				
-
-				/*calculate();
-				show();*/
 
 			}
 			else{
@@ -879,9 +872,7 @@ public class MainFrame extends JFrame {
 
 
 
-			/*indicators.get("saros").test();
-			indicators.get("metonic").test();*/
-
+			
 			gifLabel.setIcon(null);
 			gifLabel.setText("Set date");
 
@@ -915,19 +906,16 @@ public class MainFrame extends JFrame {
 				else{
 					calendar.set(spinnerDate.getYear(), spinnerDate.getMonthValue(), spinnerDate.getDayOfMonth());
 				}
-				//System.out.println("Year " + calendar.get(Calendar.YEAR) + " Month " + calendar.get(Calendar.MONTH) + " Date " + calendar.get(Calendar.DAY_OF_MONTH));
+				
 
 				Converter c = new Converter(calendar);
-				System.out.println(spinnerDate);
+				
 
 
-				System.out.println("era"+ calendar.get(Calendar.ERA)+"Year " + calendar.get(Calendar.YEAR) + " Month " + calendar.get(Calendar.MONTH) + " Date " + calendar.get(Calendar.DAY_OF_MONTH));
+				
 				long x = 0,y = 0;	
 
-				//System.out.println("OUFF" +c.military2(-204, 5, 12));
-				//y=c.cal_to_jd();
-				//spin_by_days(y);
-
+				
 				if(before && spinnerDate.isAfter(date1)){
 
 					x = c.cal_to_jd();
@@ -946,13 +934,8 @@ public class MainFrame extends JFrame {
 
 
 					long xTemp = c2.cal_to_jd();
-					System.out.println(spinnerDate);
-					System.out.println(date1);
-					System.out.println(x);
-					System.out.println(xTemp);
 
-					//c.print();
-					//c2.print();
+
 					y =Math.abs(xTemp - x);
 
 					temp=null;
@@ -966,11 +949,11 @@ public class MainFrame extends JFrame {
 					y = Math.abs(x - Converter.getCallibration());
 				}
 
-				System.out.println(x);
+				
 				date1 = spinnerDate;
 				before = true;
 
-				System.out.println(y);
+				
 
 				if(y!=0)
 					spin_by_days(y);
