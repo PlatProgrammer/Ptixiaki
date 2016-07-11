@@ -97,7 +97,7 @@ public class Gear {
 
 
 	public double getDegree() {
-		double degree2 = degree;
+		double degree2 ;
 		degree2 = Math.round(degree * 1000);
 		degree2 = (double) degree2/1000;
 		degree2 = (double) degree2  % cycle;

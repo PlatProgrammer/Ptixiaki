@@ -1,6 +1,5 @@
 import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,38 +21,9 @@ public class Main {
 
 
 		LocalDate today = LocalDate.now();
-		Date date = new Date();
-		System.out.println(date);
-		System.out.println(today);
-		//date.setMonth(date.getMonth()+1);
+		
 		Calendar calendar = new GregorianCalendar();
-		//calendar.setTime(date);
 		calendar.set(today.getYear(), today.getMonthValue()-1, today.getDayOfMonth());
-		
-		//calendar.set(Calendar.ERA,GregorianCalendar.BC);
-
-		/*calendar.set(Calendar.ERA,GregorianCalendar.AD);
-		System.out.println(calendar.getTime());*/
-
-		Converter converter = new Converter(calendar);
-		
-		System.out.println(date);
-		//System.out.println(calendar.getTime());
-
-
-		long x = converter.cal_to_jd();
-		System.out.println(x);
-
-		long y = Math.abs(x - Converter.getCallibration());
-		System.out.println(y);
-
-
-		/*System.out.println((int)(y/365.5));
-		System.out.println(y%365.5);*/
-
-
-
-
 
 		HashMap<String,Gear> gears = new HashMap<String,Gear>();
 		HashMap<String,Indicator> indicators = new HashMap<String,Indicator>();
@@ -65,11 +35,8 @@ public class Main {
 
 		initializeIndicators(indicators,gears);
 
-	
-
-
 		//new InputFrame(converter,gears,indicators);
-		new MainFrame(converter,gears,indicators);
+		new MainFrame(gears,indicators);
 
 
 
@@ -170,8 +137,10 @@ public class Main {
 		Iterator<Entry<String, Gear>> entries = gears.entrySet().iterator();
 
 		while (entries.hasNext()) {
-			HashMap.Entry entry = (HashMap.Entry) entries.next();
+			Entry<String, Gear> entry = entries.next();
 
+			//HashMap.Entry entry = (HashMap.Entry) entries.next();
+			
 			Gear value = (Gear)entry.getValue();
 			value.reset();
 
@@ -180,7 +149,7 @@ public class Main {
 		Iterator<Entry<String, Indicator>> entries2 = indicators.entrySet().iterator();
 
 		while (entries2.hasNext()) {
-			HashMap.Entry entry2 = (HashMap.Entry) entries2.next();
+			Entry<String, Indicator> entry2 = entries2.next();
 
 			Indicator value2 = (Indicator)entry2.getValue();
 			value2.reset();

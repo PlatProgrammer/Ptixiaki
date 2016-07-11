@@ -4,15 +4,11 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -29,13 +25,10 @@ import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.border.BevelBorder;
-import javax.swing.text.JTextComponent;
 
 
 
@@ -45,105 +38,89 @@ import javax.swing.text.JTextComponent;
 public class MainFrame extends JFrame {
 
 	private HashMap<String,Gear> gears;
-	private HashMap<String,Indicator> indicators;
+	private HashMap<String,Indicator> indicators;	
 	private JTextArea b1text,b2text,b3text,c1text,c2text,d1text,d2text,e1text,e2text,e3text,e4text,e5text,e6text,f1text,f2text,
-	g1text,g2text,h1text,h2text,i1text,k1text,k2text,l1text,l2text,m1text,m2text,m3text,n1text,n2text,o1text,p1text,p2text;
-
+			g1text,g2text,h1text,h2text,i1text,k1text,k2text,l1text,l2text,m1text,m2text,m3text,n1text,n2text,o1text,p1text,p2text;
 	private JTextArea callipicText,metonicText,sarosText,exeligmosText;
-
 	private JLabel b1label,b2label,b3label,c1label,c2label,d1label,d2label,e1label,e2label,e3label,e4label,e5label,e6label,f1label,f2label,g1label,
-	g2label,h1label,h2label,i1label,k1label,k2label,l1label,l2label,m1label,m2label,m3label,n1label,n2label,o1label,p1label,p2label;
-
+			g2label,h1label,h2label,i1label,k1label,k2label,l1label,l2label,m1label,m2label,m3label,n1label,n2label,o1label,p1label,p2label;
 	private JLabel callipicLabel,metonicLabel,sarosLabel,exeligmosLabel;
-
-
-	private JButton btnNewDate;
-	private Converter c;
-	private JPanel panel_1;
-	private JPanel panel_2;
-	private JSpinner spinner_1;
 	private JLabel calculateLbl;
+	private JPanel gearResultPanel,indicatorResultPanel,inputPanel,progressPanel;
+	private JButton btnNewDate;	
 	private ButtonListener listener;
-
-	private JLabel gifLabel;
-	private JPanel panel_4;
+	private JLabel gifLabel,yearLbl,dateLbl,monthLbl;	
+	private ImageIcon imageIcon;	
 	private JProgressBar progressBar;
-
-	private boolean before = false;
-	private ImageIcon imageIcon;
-	private JSpinner daySpinner;
-	private JSpinner monthSpinner;
-	private JSpinner yearSpinner;
-
-
+	private boolean before = false;	
+	private JSpinner daySpinner,monthSpinner,yearSpinner;
 	private LocalDate today,spinnerDate,date1;
 	private int day,month,year;
-	private JLabel monthLbl;
-	private JLabel lblMonth;
-	private JLabel yearLbl;
+	
+	
 
 
-	public MainFrame(Converter c,final HashMap<String,Gear> gears, final HashMap<String,Indicator> indicators) {
+	public MainFrame(final HashMap<String,Gear> gears, final HashMap<String,Indicator> indicators) {
 
 		URL iconURL = getClass().getResource("/icon.png");
 		ImageIcon icon = new ImageIcon(iconURL);
 		setIconImage(icon.getImage());
 
 
-		this.c=c;
+		//this.c=c;
 		//setResizable(false);
 		this.gears = gears;
 		this.indicators = indicators;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
+		today=LocalDate.now();
 
 
 
 
 
+		gearResultPanel = new JPanel();
+		gearResultPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 
-		JPanel panel = new JPanel();
-		panel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		indicatorResultPanel = new JPanel();
+		indicatorResultPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 
-		panel_1 = new JPanel();
-		panel_1.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		inputPanel = new JPanel();
+		inputPanel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 
-		panel_2 = new JPanel();
-		panel_2.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-
-		panel_4 = new JPanel();
-		panel_4.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		progressPanel = new JPanel();
+		progressPanel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
 				groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 						.addContainerGap()
 						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(panel, GroupLayout.PREFERRED_SIZE, 625, GroupLayout.PREFERRED_SIZE)
+								.addComponent(gearResultPanel, GroupLayout.PREFERRED_SIZE, 625, GroupLayout.PREFERRED_SIZE)
 								.addGroup(groupLayout.createSequentialGroup()
 										.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-												.addComponent(panel_4, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-												.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))
+												.addComponent(progressPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+												.addComponent(indicatorResultPanel, GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))
 										.addGap(18)
-										.addComponent(panel_2, 0, 0, Short.MAX_VALUE)))
+										.addComponent(inputPanel, 0, 0, Short.MAX_VALUE)))
 						.addContainerGap(12, GroupLayout.PREFERRED_SIZE))
 				);
 		groupLayout.setVerticalGroup(
 				groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 						.addContainerGap()
-						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 247, GroupLayout.PREFERRED_SIZE)
+						.addComponent(gearResultPanel, GroupLayout.PREFERRED_SIZE, 247, GroupLayout.PREFERRED_SIZE)
 						.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 								.addGroup(groupLayout.createSequentialGroup()
 										.addGap(18)
-										.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(indicatorResultPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 										.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
+										.addComponent(progressPanel, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
 										.addContainerGap())
 								.addGroup(groupLayout.createSequentialGroup()
 										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(panel_2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+										.addComponent(inputPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
 				);
 
 		progressBar = new JProgressBar();
@@ -152,32 +129,31 @@ public class MainFrame extends JFrame {
 		progressBar.setMaximum(99);
 		progressBar.setName("");
 		progressBar.setStringPainted(true);
-		GroupLayout gl_panel_4 = new GroupLayout(panel_4);
-		gl_panel_4.setHorizontalGroup(
-				gl_panel_4.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_panel_4.createSequentialGroup()
+		GroupLayout gl_progressPanel = new GroupLayout(progressPanel);
+		gl_progressPanel.setHorizontalGroup(
+				gl_progressPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(Alignment.TRAILING, gl_progressPanel.createSequentialGroup()
 						.addContainerGap(24, Short.MAX_VALUE)
 						.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addGap(20))
 				);
-		gl_panel_4.setVerticalGroup(
-				gl_panel_4.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_panel_4.createSequentialGroup()
+		gl_progressPanel.setVerticalGroup(
+				gl_progressPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(Alignment.TRAILING, gl_progressPanel.createSequentialGroup()
 						.addContainerGap(49, Short.MAX_VALUE)
 						.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
 						.addGap(46))
 				);
-		panel_4.setLayout(gl_panel_4);
+		progressPanel.setLayout(gl_progressPanel);
 
 		btnNewDate = new JButton("New Date");
-		listener = new ButtonListener(this);
+		listener = new ButtonListener();
 		btnNewDate.addActionListener(listener);
 
 
 
 
-		Date now = new Date();
-		today = LocalDate.now();
+		
 
 		//ftf.setEditable(true); 
 
@@ -205,9 +181,9 @@ public class MainFrame extends JFrame {
 		//yearSpinner.setValue(today.getYear());
 		yearSpinner.setValue(-204);
 
-		monthLbl = new JLabel("Date");
+		dateLbl = new JLabel("Date");
 
-		lblMonth = new JLabel("Month");
+		monthLbl = new JLabel("Month");
 
 		yearLbl = new JLabel("Year");
 
@@ -220,57 +196,57 @@ public class MainFrame extends JFrame {
 
 
 
-		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
-		gl_panel_2.setHorizontalGroup(
-				gl_panel_2.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_2.createSequentialGroup()
+		GroupLayout gl_inputPanel = new GroupLayout(inputPanel);
+		gl_inputPanel.setHorizontalGroup(
+				gl_inputPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_inputPanel.createSequentialGroup()
 						.addGap(95)
 						.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 228, GroupLayout.PREFERRED_SIZE)
 						.addContainerGap(86, Short.MAX_VALUE))
-				.addGroup(gl_panel_2.createSequentialGroup()
+				.addGroup(gl_inputPanel.createSequentialGroup()
 						.addContainerGap(168, Short.MAX_VALUE)
 						.addComponent(btnNewDate)
 						.addGap(162))
-				.addGroup(gl_panel_2.createSequentialGroup()
+				.addGroup(gl_inputPanel.createSequentialGroup()
 						.addContainerGap(163, Short.MAX_VALUE)
 						.addComponent(calculateLbl)
 						.addGap(164))
-				.addGroup(gl_panel_2.createSequentialGroup()
-						.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel_2.createSequentialGroup()
+				.addGroup(gl_inputPanel.createSequentialGroup()
+						.addGroup(gl_inputPanel.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_inputPanel.createSequentialGroup()
 										.addGap(109)
-										.addComponent(monthLbl)
+										.addComponent(dateLbl)
 										.addPreferredGap(ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
-										.addComponent(lblMonth))
-								.addGroup(gl_panel_2.createSequentialGroup()
+										.addComponent(monthLbl))
+								.addGroup(gl_inputPanel.createSequentialGroup()
 										.addGap(101)
 										.addComponent(daySpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 										.addPreferredGap(ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
 										.addComponent(monthSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-						.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel_2.createSequentialGroup()
+						.addGroup(gl_inputPanel.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_inputPanel.createSequentialGroup()
 										.addGap(32)
 										.addComponent(yearSpinner, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_panel_2.createSequentialGroup()
+								.addGroup(gl_inputPanel.createSequentialGroup()
 										.addGap(45)
 										.addComponent(yearLbl)))
 						.addContainerGap(95, Short.MAX_VALUE))
 				);
-		gl_panel_2.setVerticalGroup(
-				gl_panel_2.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_2.createSequentialGroup()
-						.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel_2.createSequentialGroup()
+		gl_inputPanel.setVerticalGroup(
+				gl_inputPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_inputPanel.createSequentialGroup()
+						.addGroup(gl_inputPanel.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_inputPanel.createSequentialGroup()
 										.addGap(67)
 										.addComponent(calculateLbl))
-								.addGroup(gl_panel_2.createSequentialGroup()
+								.addGroup(gl_inputPanel.createSequentialGroup()
 										.addContainerGap()
-										.addGroup(gl_panel_2.createParallelGroup(Alignment.BASELINE)
-												.addComponent(monthLbl, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-												.addComponent(lblMonth)
+										.addGroup(gl_inputPanel.createParallelGroup(Alignment.BASELINE)
+												.addComponent(dateLbl, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+												.addComponent(monthLbl)
 												.addComponent(yearLbl))
 										.addPreferredGap(ComponentPlacement.RELATED)
-										.addGroup(gl_panel_2.createParallelGroup(Alignment.BASELINE)
+										.addGroup(gl_inputPanel.createParallelGroup(Alignment.BASELINE)
 												.addComponent(daySpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 												.addComponent(monthSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 												.addComponent(yearSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
@@ -300,7 +276,7 @@ public class MainFrame extends JFrame {
 
 
 		gifLabel.setVisible(false);
-		panel_2.setLayout(gl_panel_2);
+		inputPanel.setLayout(gl_inputPanel);
 		exeligmosLabel = new JLabel("exeligmos");
 		sarosLabel = new JLabel("saros");
 		metonicLabel = new JLabel("metonic");
@@ -315,55 +291,55 @@ public class MainFrame extends JFrame {
 
 		callipicText = new JTextArea();
 		callipicText.setEditable(false);
-		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
-		gl_panel_1.setHorizontalGroup(
-				gl_panel_1.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_1.createSequentialGroup()
+		GroupLayout gl_indicatorResultPanel = new GroupLayout(indicatorResultPanel);
+		gl_indicatorResultPanel.setHorizontalGroup(
+				gl_indicatorResultPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_indicatorResultPanel.createSequentialGroup()
 						.addGap(22)
-						.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING, false)
-								.addGroup(gl_panel_1.createSequentialGroup()
+						.addGroup(gl_indicatorResultPanel.createParallelGroup(Alignment.TRAILING, false)
+								.addGroup(gl_indicatorResultPanel.createSequentialGroup()
 										.addComponent(exeligmosLabel)
 										.addGap(18))
-								.addGroup(gl_panel_1.createSequentialGroup()
+								.addGroup(gl_indicatorResultPanel.createSequentialGroup()
 										.addComponent(sarosLabel)
 										.addGap(29))
-								.addGroup(gl_panel_1.createSequentialGroup()
+								.addGroup(gl_indicatorResultPanel.createSequentialGroup()
 										.addComponent(metonicLabel)
 										.addGap(23))
-								.addGroup(gl_panel_1.createSequentialGroup()
+								.addGroup(gl_indicatorResultPanel.createSequentialGroup()
 										.addComponent(callipicLabel)
 										.addGap(27)))
-						.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_indicatorResultPanel.createParallelGroup(Alignment.LEADING)
 								.addComponent(callipicText, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
 								.addComponent(metonicText, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
 								.addComponent(sarosText, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
 								.addComponent(exeligmosText, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))
 						.addContainerGap(35, Short.MAX_VALUE))
 				);
-		gl_panel_1.setVerticalGroup(
-				gl_panel_1.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_1.createSequentialGroup()
+		gl_indicatorResultPanel.setVerticalGroup(
+				gl_indicatorResultPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_indicatorResultPanel.createSequentialGroup()
 						.addGap(24)
-						.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
+						.addGroup(gl_indicatorResultPanel.createParallelGroup(Alignment.BASELINE)
 								.addComponent(exeligmosLabel)
 								.addComponent(exeligmosText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 						.addGap(18)
-						.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_indicatorResultPanel.createParallelGroup(Alignment.LEADING)
 								.addComponent(sarosText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(sarosLabel))
 						.addGap(18)
-						.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_indicatorResultPanel.createParallelGroup(Alignment.LEADING)
 								.addComponent(metonicText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(metonicLabel))
 						.addGap(18)
-						.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_indicatorResultPanel.createParallelGroup(Alignment.LEADING)
 								.addComponent(callipicText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(callipicLabel))
 						.addContainerGap(24, Short.MAX_VALUE))
 				);
-		gl_panel_1.linkSize(SwingConstants.VERTICAL, new Component[] {exeligmosText, sarosText, metonicText, callipicText});
-		gl_panel_1.linkSize(SwingConstants.HORIZONTAL, new Component[] {exeligmosText, sarosText, metonicText, callipicText});
-		panel_1.setLayout(gl_panel_1);
+		gl_indicatorResultPanel.linkSize(SwingConstants.VERTICAL, new Component[] {exeligmosText, sarosText, metonicText, callipicText});
+		gl_indicatorResultPanel.linkSize(SwingConstants.HORIZONTAL, new Component[] {exeligmosText, sarosText, metonicText, callipicText});
+		indicatorResultPanel.setLayout(gl_indicatorResultPanel);
 
 
 
@@ -465,251 +441,234 @@ public class MainFrame extends JFrame {
 		p2label = new JLabel("p2");
 		p2text = new JTextArea();
 		p2text.setEditable(false);
-		spinner_1 = new JSpinner();
-		SpinnerDateModel dateModel = new SpinnerDateModel(now, null, null , Calendar.DAY_OF_YEAR);
-		spinner_1.setModel(dateModel);
-		spinner_1.setVisible(false);
-
-
-
-
-
-
-		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(
-				gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup()
-						.addGap(31)
-						.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel.createSequentialGroup()
-										.addComponent(d2label)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(d2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-										.addGap(18)
-										.addComponent(f1label, GroupLayout.PREFERRED_SIZE, 12, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_panel.createSequentialGroup()
-										.addComponent(d1label)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(d1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-										.addGap(18)
-										.addComponent(e6label))
-								.addGroup(gl_panel.createSequentialGroup()
-										.addComponent(c2label)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(c2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-										.addGap(18)
-										.addComponent(e5label))
-								.addGroup(gl_panel.createSequentialGroup()
-										.addComponent(c1label)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(c1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-										.addGap(18)
-										.addComponent(e4label))
-								.addGroup(gl_panel.createSequentialGroup()
-										.addComponent(b3label)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(b3text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-										.addGap(18)
-										.addComponent(e3label))
-								.addGroup(gl_panel.createSequentialGroup()
-										.addComponent(b2label)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(b2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-										.addGap(18)
-										.addComponent(e2label))
-								.addGroup(gl_panel.createSequentialGroup()
-										.addComponent(b1label)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(b1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-										.addGap(18)
-										.addComponent(e1label)))
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-								.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-										.addComponent(e2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-										.addComponent(e1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-										.addComponent(e3text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-										.addComponent(e5text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-										.addComponent(f1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-										.addComponent(e4text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))
-								.addComponent(e6text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))
-						.addGap(18)
-						.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel.createSequentialGroup()
-										.addComponent(g1label)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(g1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-										.addGap(18)
-										.addComponent(l1label)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(l1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-										.addGap(18)
-										.addComponent(o1label)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(o1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_panel.createSequentialGroup()
-										.addComponent(f2label, GroupLayout.PREFERRED_SIZE, 12, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(f2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-										.addGap(18)
-										.addComponent(k2label)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(k2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-										.addGap(18)
-										.addComponent(n2label)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(n2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_panel.createSequentialGroup()
-										.addComponent(g2label)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(g2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-										.addGap(18)
-										.addComponent(l2label)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(l2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-										.addGap(18)
-										.addComponent(p1label)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(p1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_panel.createSequentialGroup()
-										.addComponent(k1label)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(k1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-										.addGap(18)
-										.addComponent(n1label)
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addComponent(n1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_panel.createSequentialGroup()
-										.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-												.addGroup(gl_panel.createSequentialGroup()
-														.addComponent(h1label)
-														.addPreferredGap(ComponentPlacement.UNRELATED)
-														.addComponent(h1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-														.addGap(18)
-														.addComponent(m1label)
-														.addPreferredGap(ComponentPlacement.UNRELATED)
-														.addComponent(m1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-														.addGap(18)
-														.addComponent(p2label))
-												.addGroup(gl_panel.createSequentialGroup()
-														.addComponent(h2label)
-														.addPreferredGap(ComponentPlacement.UNRELATED)
-														.addComponent(h2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-														.addGap(18)
-														.addComponent(m2label)
-														.addPreferredGap(ComponentPlacement.UNRELATED)
-														.addComponent(m2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))
-												.addGroup(gl_panel.createSequentialGroup()
-														.addComponent(i1label)
-														.addPreferredGap(ComponentPlacement.UNRELATED)
-														.addComponent(i1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-														.addGap(18)
-														.addComponent(m3label, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)
-														.addPreferredGap(ComponentPlacement.UNRELATED)
-														.addComponent(m3text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)))
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-												.addComponent(spinner_1, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
-												.addComponent(p2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))))
-						.addContainerGap(33, Short.MAX_VALUE))
-				);
-		gl_panel.setVerticalGroup(
-				gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup()
-						.addGap(38)
-						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(b1label)
-								.addComponent(b1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(e1label)
-								.addComponent(e1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(f2label, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
-								.addComponent(f2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(k2label)
-								.addComponent(k2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(n2label)
-								.addComponent(n2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(b2label)
-								.addComponent(b2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(e2label)
-								.addComponent(e2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(g1label)
-								.addComponent(g1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(l1label)
-								.addComponent(l1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(o1label)
-								.addComponent(o1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(b3label)
-								.addComponent(b3text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(e3label)
-								.addComponent(e3text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(g2label)
-								.addComponent(g2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(l2label)
-								.addComponent(l2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(p1label)
-								.addComponent(p1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(c1label)
-								.addComponent(c1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(e4label)
-								.addComponent(h1label)
-								.addComponent(h1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(e4text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(m1label)
-								.addComponent(m1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(p2label)
-								.addComponent(p2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel.createSequentialGroup()
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-												.addComponent(c2label)
-												.addComponent(c2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-												.addComponent(e5label)
-												.addComponent(e5text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-												.addComponent(h2label)
-												.addComponent(h2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-												.addComponent(m2label)
-												.addComponent(m2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-												.addComponent(d1label)
-												.addComponent(d1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-												.addComponent(e6label)
-												.addComponent(i1label)
-												.addComponent(i1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-												.addComponent(e6text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-												.addComponent(m3label, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
-												.addComponent(m3text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-												.addComponent(d2label)
-												.addComponent(d2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-												.addComponent(f1label, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
-												.addComponent(f1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-												.addComponent(k1label)
-												.addComponent(k1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-												.addComponent(n1label)
-												.addComponent(n1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-								.addGroup(gl_panel.createSequentialGroup()
-										.addGap(26)
-										.addComponent(spinner_1, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)))
-						.addGap(125))
-				);
-		gl_panel.linkSize(SwingConstants.VERTICAL, new Component[] {b1label, b2label, b3label, c1label, c2label, d1label, d2label, e1label, e2label, e3label, e4label, e5label, e6label, f1label, f2label, g1label, g2label, h1label, h2label, i1label, k1label, k2label, l1label, l2label, m1label, m2label, m3label, n1label, n2label, o1label, p1label, p2label});
-		gl_panel.linkSize(SwingConstants.VERTICAL, new Component[] {b1text, b2text, b3text, c1text, c2text, d1text, d2text, e1text, e2text, e3text, e4text, e5text, e6text, f1text, g1text, h1text, h2text, i1text, k1text, f2text, g2text, k2text, l1text, l2text, m1text, m2text, m3text, n1text, n2text, o1text, p1text, p2text});
-		gl_panel.linkSize(SwingConstants.HORIZONTAL, new Component[] {b1label, b2label, b3label, c1label, c2label, d1label, d2label, e1label, e2label, e3label, e4label, e5label, e6label, f1label, f2label, g1label, g2label, h1label, h2label, i1label, k1label, k2label, l1label, l2label, m1label, m2label, m3label, n1label, n2label, o1label, p1label, p2label});
-		gl_panel.linkSize(SwingConstants.HORIZONTAL, new Component[] {b1text, b2text, b3text, c1text, c2text, d1text, d2text, e1text, e2text, e3text, e4text, e5text, e6text, f1text, g1text, h1text, h2text, i1text, k1text, f2text, g2text, k2text, l1text, l2text, m1text, m2text, m3text, n1text, n2text, o1text, p1text, p2text});
-		panel.setLayout(gl_panel);
+		GroupLayout gl_gearResultPanel = new GroupLayout(gearResultPanel);
+		gl_gearResultPanel.setHorizontalGroup(
+			gl_gearResultPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_gearResultPanel.createSequentialGroup()
+					.addGap(31)
+					.addGroup(gl_gearResultPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_gearResultPanel.createSequentialGroup()
+							.addComponent(d2label)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(d2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(f1label, GroupLayout.PREFERRED_SIZE, 12, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_gearResultPanel.createSequentialGroup()
+							.addComponent(d1label)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(d1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(e6label))
+						.addGroup(gl_gearResultPanel.createSequentialGroup()
+							.addComponent(c2label)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(c2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(e5label))
+						.addGroup(gl_gearResultPanel.createSequentialGroup()
+							.addComponent(c1label)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(c1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(e4label))
+						.addGroup(gl_gearResultPanel.createSequentialGroup()
+							.addComponent(b3label)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(b3text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(e3label))
+						.addGroup(gl_gearResultPanel.createSequentialGroup()
+							.addComponent(b2label)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(b2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(e2label))
+						.addGroup(gl_gearResultPanel.createSequentialGroup()
+							.addComponent(b1label)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(b1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(e1label)))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_gearResultPanel.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_gearResultPanel.createParallelGroup(Alignment.LEADING)
+							.addComponent(e2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addComponent(e1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addComponent(e3text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addComponent(e5text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addComponent(f1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addComponent(e4text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))
+						.addComponent(e6text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_gearResultPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_gearResultPanel.createSequentialGroup()
+							.addComponent(g1label)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(g1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(l1label)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(l1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(o1label)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(o1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_gearResultPanel.createSequentialGroup()
+							.addComponent(f2label, GroupLayout.PREFERRED_SIZE, 12, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(f2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(k2label)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(k2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(n2label)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(n2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_gearResultPanel.createSequentialGroup()
+							.addComponent(g2label)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(g2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(l2label)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(l2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(p1label)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(p1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_gearResultPanel.createSequentialGroup()
+							.addComponent(k1label)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(k1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(n1label)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(n1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_gearResultPanel.createSequentialGroup()
+							.addGroup(gl_gearResultPanel.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_gearResultPanel.createSequentialGroup()
+									.addComponent(h1label)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(h1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+									.addGap(18)
+									.addComponent(m1label)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(m1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+									.addGap(18)
+									.addComponent(p2label))
+								.addGroup(gl_gearResultPanel.createSequentialGroup()
+									.addComponent(h2label)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(h2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+									.addGap(18)
+									.addComponent(m2label)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(m2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_gearResultPanel.createSequentialGroup()
+									.addComponent(i1label)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(i1text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+									.addGap(18)
+									.addComponent(m3label, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(m3text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(p2text, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(44, Short.MAX_VALUE))
+		);
+		gl_gearResultPanel.setVerticalGroup(
+			gl_gearResultPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_gearResultPanel.createSequentialGroup()
+					.addGap(38)
+					.addGroup(gl_gearResultPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(b1label)
+						.addComponent(b1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(e1label)
+						.addComponent(e1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(f2label, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+						.addComponent(f2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(k2label)
+						.addComponent(k2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(n2label)
+						.addComponent(n2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_gearResultPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(b2label)
+						.addComponent(b2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(e2label)
+						.addComponent(e2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(g1label)
+						.addComponent(g1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(l1label)
+						.addComponent(l1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(o1label)
+						.addComponent(o1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_gearResultPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(b3label)
+						.addComponent(b3text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(e3label)
+						.addComponent(e3text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(g2label)
+						.addComponent(g2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(l2label)
+						.addComponent(l2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(p1label)
+						.addComponent(p1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_gearResultPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(c1label)
+						.addComponent(c1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(e4label)
+						.addComponent(h1label)
+						.addComponent(h1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(e4text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(m1label)
+						.addComponent(m1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(p2label)
+						.addComponent(p2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_gearResultPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(c2label)
+						.addComponent(c2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(e5label)
+						.addComponent(e5text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(h2label)
+						.addComponent(h2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(m2label)
+						.addComponent(m2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_gearResultPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(d1label)
+						.addComponent(d1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(e6label)
+						.addComponent(i1label)
+						.addComponent(i1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(e6text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(m3label, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+						.addComponent(m3text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_gearResultPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(d2label)
+						.addComponent(d2text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(f1label, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+						.addComponent(f1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(k1label)
+						.addComponent(k1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(n1label)
+						.addComponent(n1text, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(125))
+		);
+		gl_gearResultPanel.linkSize(SwingConstants.VERTICAL, new Component[] {b1text, b2text, b3text, c1text, c2text, d1text, d2text, e1text, e2text, e3text, e4text, e5text, e6text, f1text, g1text, h1text, h2text, i1text, k1text, f2text, g2text, k2text, l1text, l2text, m1text, m2text, m3text, n1text, n2text, o1text, p1text, p2text});
+		gl_gearResultPanel.linkSize(SwingConstants.VERTICAL, new Component[] {b1label, b2label, b3label, c1label, c2label, d1label, d2label, e1label, e2label, e3label, e4label, e5label, e6label, f1label, f2label, g1label, g2label, h1label, h2label, i1label, k1label, k2label, l1label, l2label, m1label, m2label, m3label, n1label, n2label, o1label, p1label, p2label});
+		gl_gearResultPanel.linkSize(SwingConstants.HORIZONTAL, new Component[] {b1text, b2text, b3text, c1text, c2text, d1text, d2text, e1text, e2text, e3text, e4text, e5text, e6text, f1text, g1text, h1text, h2text, i1text, k1text, f2text, g2text, k2text, l1text, l2text, m1text, m2text, m3text, n1text, n2text, o1text, p1text, p2text});
+		gl_gearResultPanel.linkSize(SwingConstants.HORIZONTAL, new Component[] {b1label, b2label, b3label, c1label, c2label, d1label, d2label, e1label, e2label, e3label, e4label, e5label, e6label, f1label, f2label, g1label, g2label, h1label, h2label, i1label, k1label, k2label, l1label, l2label, m1label, m2label, m3label, n1label, n2label, o1label, p1label, p2label});
+		gearResultPanel.setLayout(gl_gearResultPanel);
 		getContentPane().setLayout(groupLayout);
-		
+
 		getRootPane().setDefaultButton(btnNewDate);
-		
+
 
 		setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
@@ -728,6 +687,8 @@ public class MainFrame extends JFrame {
 		month = (Integer)monthSpinner.getValue();
 		year = (Integer)yearSpinner.getValue();		
 	}
+	
+	
 
 
 
@@ -738,14 +699,12 @@ public class MainFrame extends JFrame {
 
 
 	class ButtonListener implements ActionListener{
-		private MainFrame fr;
+		
 
 		int[] noLeap={31,28,31,30,31,30,31,31,30,31,30,31};
 		int[] Leap={31,29,31,30,31,30,31,31,30,31,30,31};
 
-		public ButtonListener(MainFrame fr){
-			this.fr=fr;
-		}
+		
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -763,13 +722,10 @@ public class MainFrame extends JFrame {
 				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
 
-
-
-
-
 				MyTask task = new MyTask();
 				task.execute();
-
+				
+				
 
 				/*calculate();
 				show();*/
@@ -948,26 +904,8 @@ public class MainFrame extends JFrame {
 
 				return null;
 			}
-			@Override
-			protected void process(List<Integer> ts){
-				int l  = ts.get(ts.size() - 1);
-
-				progressBar.setValue(l);
-
-			}
-			@Override
-			protected void done() {
-				show();  // this is run on the Swing event thread
-				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-				calculateLbl.setVisible(false);
-				//gifLabel.setVisible(false);
-				progressBar.setValue(progressBar.getMaximum());
-			}
 
 			public void calculate(){
-
-
-
 
 				GregorianCalendar calendar = new GregorianCalendar();
 
@@ -979,7 +917,7 @@ public class MainFrame extends JFrame {
 				}
 				//System.out.println("Year " + calendar.get(Calendar.YEAR) + " Month " + calendar.get(Calendar.MONTH) + " Date " + calendar.get(Calendar.DAY_OF_MONTH));
 
-				c = new Converter(calendar);
+				Converter c = new Converter(calendar);
 				System.out.println(spinnerDate);
 
 
@@ -1033,16 +971,13 @@ public class MainFrame extends JFrame {
 				before = true;
 
 				System.out.println(y);
-				
+
 				if(y!=0)
-				spin_by_days(y);
+					spin_by_days(y);
 
 
 			}
-
-
-
-
+			
 			public void spin_by_days(long days){
 
 
@@ -1063,7 +998,7 @@ public class MainFrame extends JFrame {
 				}
 
 			}
-
+			
 			public void checkProccess(long days){
 				if(t>=days/100){
 					t2+=1;
@@ -1072,6 +1007,28 @@ public class MainFrame extends JFrame {
 				}
 				t++;
 			}
+			
+			@Override
+			protected void process(List<Integer> ts){
+				int l  = ts.get(ts.size() - 1);
+
+				progressBar.setValue(l);
+
+			}
+			@Override
+			protected void done() {
+				show();  // this is run on the Swing event thread
+				getContentPane().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				calculateLbl.setVisible(false);
+				//gifLabel.setVisible(false);
+				progressBar.setValue(progressBar.getMaximum());
+			}
+
+
+
+			
+
+			
 
 			public void reset(){
 				Main.reset(gears, indicators);
