@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -56,6 +55,7 @@ public class MainFrame extends JFrame {
 	private JSpinner daySpinner,monthSpinner,yearSpinner;
 	private LocalDate today,spinnerDate,date1;
 	private int day,month,year;
+	private String error;
 	
 	
 
@@ -709,7 +709,7 @@ public class MainFrame extends JFrame {
 			else{
 				
 				JOptionPane.showMessageDialog(null,
-						"wrong date",
+						error,
 						"Error",
 						JOptionPane.ERROR_MESSAGE);
 
@@ -729,7 +729,6 @@ public class MainFrame extends JFrame {
 
 		public boolean checkDate(int day,int month,int year){
 			boolean good = true;
-			String error;
 			if(year < - 4712){
 				System.out.println("Too early");
 				error = "Too early";
@@ -755,12 +754,14 @@ public class MainFrame extends JFrame {
 						if(isLeapYear(year)){
 							if(day>Leap[month-1]){
 								System.out.println("Wrong Datee");
+								error = "Wrong Date";
 								good = false;
 							}
 						}
 						else{
 							if(day>noLeap[month-1]){
 								System.out.println("Wrong Date");
+								error = "Wrong Date";
 								good = false;
 							}
 						}
