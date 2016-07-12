@@ -28,14 +28,13 @@ public class Main {
 
 		initializeIndicators(indicators,gears);
 
-		//new InputFrame(converter,gears,indicators);
 		new MainFrame(gears,indicators);
 
 	}
 
 	public static void initializeIndicators(HashMap<String, Indicator> indicators,HashMap<String,Gear> gears){
 
-		Indicator callipic = new Indicator("callipic", gears.get("o1"),1);	indicators.put(callipic.getName(), callipic);
+		Indicator callipic = new Indicator("callipic", gears.get("o1"),1);		indicators.put(callipic.getName(), callipic);
 		Indicator metonic = new Indicator("metonic", gears.get("n1"),5);		indicators.put(metonic.getName(), metonic);
 		Indicator saros = new Indicator("saros", gears.get("g1"),4);			indicators.put(saros.getName(), saros);
 		Indicator exeligmos = new Indicator("exeligmos", gears.get("i1"),1);	indicators.put(exeligmos.getName(), exeligmos);
@@ -122,8 +121,6 @@ public class Main {
 	}
 
 	public static void reset(HashMap<String,Gear> gears,HashMap<String, Indicator> indicators){
-
-
 
 		Iterator<Entry<String, Gear>> entries = gears.entrySet().iterator();
 

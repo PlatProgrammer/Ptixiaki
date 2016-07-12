@@ -1,8 +1,8 @@
 
 public class Indicator {
 
-	private double degree=0;
-	private double degreeTotal=0;
+	private double degree;
+	private double degreeTotal;
 	private double normal_degree;
 	private int reel;
 	private final int reels;
@@ -10,12 +10,21 @@ public class Indicator {
 	private final double  MAX_DEGREES;
 	private static final double  cycle= 360;
 
-	private final int value;
-	
-	
+	private final int ipodieresis;
+	private double result;
+	private final double fakeResult;
+	private int intResult;
+
+
 	public void test(){
-		//System.out.println(name + degree);
-		System.out.println(name + degreeTotal);
+		System.out.println(name);
+		System.out.println("degree " + degree);
+		System.out.println("degreeTotal " + degreeTotal);
+		System.out.println("normal_degree " + normal_degree);
+		System.out.println("reel " + reel);
+		System.out.println("result " +result);
+		System.out.println("intResult "+intResult);
+
 	}
 
 
@@ -23,6 +32,7 @@ public class Indicator {
 
 
 	public Indicator(String name,Gear mover,int reels) {
+
 		this.name = name;
 		this.reels = reels;
 		MAX_DEGREES = reels * cycle;
@@ -30,20 +40,20 @@ public class Indicator {
 
 		switch(name){
 
-		case "metonic" : value = 235;
+		case "metonic" : ipodieresis = 235; fakeResult=132.26845347451726;
 		break;
 
-		case "callipic" : value = 4;
+		case "callipic" : ipodieresis = 4; fakeResult=0.5628444828704694;
 		break;
 
-		case "saros" : value = 223;
+		case "saros" : ipodieresis = 223; fakeResult=0;
 		break;
 
-		case "exeligmos" : value = 3;
+		case "exeligmos" : ipodieresis = 3; fakeResult=0;
 		break;
 
 		default: System.err.println("Indicator error"); 
-		value = 0;
+		ipodieresis = 0; fakeResult=0;
 		break;
 		}
 
@@ -75,19 +85,21 @@ public class Indicator {
 	}
 
 	public int setResult(){
-		double mam = cycle / (  (double) value/reels); // mam = moires ana sinodiko mina*
-		
-		
-		
-		double result = degreeTotal / mam;
-		//int intResult = (int) Math.ceil(result);
-		int intResult = (int) Math.floor(result) ;
-		
-		intResult = (intResult%value)+1;
-		
-		
+		double mam = cycle / (  (double) ipodieresis/reels); // mam = moires ana sinodiko mina*
+
+
+
+		result = degreeTotal / mam;
+		//intResult = (int) Math.ceil(result);
+		result += fakeResult;
+
+		intResult = (int) Math.floor(result);
+
+		intResult = (intResult%ipodieresis)+1;
+
+
 		return intResult;
-		
+
 	}
 
 
@@ -96,10 +108,13 @@ public class Indicator {
 	}
 
 	public void reset(){
+
 		this.degree = 0;
 		this.reel=0;
 		this.degreeTotal=0;
 		this.normal_degree=0;
+
+
 	}
 
 

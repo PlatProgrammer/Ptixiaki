@@ -21,9 +21,7 @@ public class Gear {
 	public Gear(int teeth,String name) {
 		this.teeth = teeth;
 		this.name = name;
-		this.angle = (double) cycle / teeth;
-		
-		
+		this.angle = (double) cycle / teeth;		
 	}
 	
 	
@@ -89,8 +87,6 @@ public class Gear {
 		
 	}
 
-
-
 	public double getAngle() {
 		return angle;
 	}
@@ -110,8 +106,7 @@ public class Gear {
 	}
 	
 	public void reset(){
-		this.degree = 0;
-		
+		this.degree = 0;		
 	}
 	
 

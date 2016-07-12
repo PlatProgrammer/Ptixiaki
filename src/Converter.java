@@ -4,7 +4,9 @@ import java.util.GregorianCalendar;
 
 public class Converter {
 
-	private static final long callibration = 1647044;
+	private static final long sarosCallibration = 1647044;
+	private static final long metonicCallibration = 1643138;
+	private static final long difference = metonicCallibration - sarosCallibration;
 	private int era;
 	private int y,m,d;
 	
@@ -42,9 +44,6 @@ public class Converter {
 
 
 	public long cal_to_jd(){
-
-
-
 
 
 		int jy, ja, jm;			
@@ -100,7 +99,17 @@ public class Converter {
 	}
 	
 
-	public static long getCallibration() {
-		return callibration;
+	public static long getSarosCallibration() {
+		return sarosCallibration;
 	}
+	
+	public static long getMetonicCallibration() {
+		return metonicCallibration;
+	}
+
+	public static long getDifference() {
+		return Math.abs(difference);
+	}
+	
+	
 }

@@ -67,8 +67,6 @@ public class MainFrame extends JFrame {
 		setIconImage(icon.getImage());
 
 
-		//this.c=c;
-		//setResizable(false);
 		this.gears = gears;
 		this.indicators = indicators;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -441,6 +439,7 @@ public class MainFrame extends JFrame {
 		p2label = new JLabel("p2");
 		p2text = new JTextArea();
 		p2text.setEditable(false);
+		
 		GroupLayout gl_gearResultPanel = new GroupLayout(gearResultPanel);
 		gl_gearResultPanel.setHorizontalGroup(
 			gl_gearResultPanel.createParallelGroup(Alignment.LEADING)
@@ -665,10 +664,11 @@ public class MainFrame extends JFrame {
 		gl_gearResultPanel.linkSize(SwingConstants.HORIZONTAL, new Component[] {b1text, b2text, b3text, c1text, c2text, d1text, d2text, e1text, e2text, e3text, e4text, e5text, e6text, f1text, g1text, h1text, h2text, i1text, k1text, f2text, g2text, k2text, l1text, l2text, m1text, m2text, m3text, n1text, n2text, o1text, p1text, p2text});
 		gl_gearResultPanel.linkSize(SwingConstants.HORIZONTAL, new Component[] {b1label, b2label, b3label, c1label, c2label, d1label, d2label, e1label, e2label, e3label, e4label, e5label, e6label, f1label, f2label, g1label, g2label, h1label, h2label, i1label, k1label, k2label, l1label, l2label, m1label, m2label, m3label, n1label, n2label, o1label, p1label, p2label});
 		gearResultPanel.setLayout(gl_gearResultPanel);
+		
 		getContentPane().setLayout(groupLayout);
 
 		getRootPane().setDefaultButton(btnNewDate);
-
+		
 
 		setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
@@ -686,15 +686,6 @@ public class MainFrame extends JFrame {
 	}
 	
 	
-
-
-
-
-
-
-
-
-
 	class ButtonListener implements ActionListener{
 		
 
@@ -705,26 +696,18 @@ public class MainFrame extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			
 			spinnerDate=null;
 			getValues();
+			
 			if(checkDate(day, month, year)){
-
-				progressBar.setVisible(true);
-				calculateLbl.setVisible(true);	
-				gifLabel.setVisible(true);
-				gifLabel.setText("");
-				gifLabel.setIcon(imageIcon);
-
-				spinnerDate = LocalDate.of(year,month, day);
-				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-
-
+				
 				MyTask task = new MyTask();
 				task.execute();
 				
-
 			}
 			else{
+				
 				JOptionPane.showMessageDialog(null,
 						"wrong date",
 						"Error",
@@ -895,8 +878,13 @@ public class MainFrame extends JFrame {
 
 				return null;
 			}
+			
+			
 
 			public void calculate(){
+				
+				
+				spinnerDate = LocalDate.of(year,month, day);
 
 				GregorianCalendar calendar = new GregorianCalendar();
 
@@ -920,8 +908,9 @@ public class MainFrame extends JFrame {
 
 					x = c.cal_to_jd();
 
-
+					
 					GregorianCalendar temp = new GregorianCalendar();
+					
 					if(date1.getYear()<0){
 						temp.set(date1.getYear()+1, date1.getMonthValue(), date1.getDayOfMonth());
 					}
@@ -946,7 +935,7 @@ public class MainFrame extends JFrame {
 				else{
 					reset();
 					x = c.cal_to_jd();
-					y = Math.abs(x - Converter.getCallibration());
+					y = Math.abs(x - Converter.getSarosCallibration());
 				}
 
 				
@@ -955,14 +944,48 @@ public class MainFrame extends JFrame {
 
 				
 
-				if(y!=0)
+				if(y!=0){
+					start_graphics();
 					spin_by_days(y);
+				}
+				
+				/*start_graphics();
+				
+				spin_by_days(Converter.getDifference());
+				
+				System.out.println(Converter.getDifference());*/
+				
+				
 
 
 			}
 			
+			public void start_graphics(){
+				
+				btnNewDate.setEnabled(false);
+				progressBar.setVisible(true);
+				calculateLbl.setVisible(true);	
+				gifLabel.setVisible(true);
+				gifLabel.setText("");
+				gifLabel.setIcon(imageIcon);
+				getContentPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				
+			}
+			
+			public void end_graphics(){
+				show();  // this is run on the Swing event thread
+				getContentPane().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				calculateLbl.setVisible(false);
+				progressBar.setValue(progressBar.getMaximum());
+				btnNewDate.setEnabled(true);
+				indicators.get("metonic").test();
+				indicators.get("callipic").test();
+			}
+			
 			public void spin_by_days(long days){
-
+				
+				
+				
 
 				double angle_day = (double) 360/365.25;
 				double a2 = angle_day/4;
@@ -982,6 +1005,11 @@ public class MainFrame extends JFrame {
 
 			}
 			
+			
+			
+			
+			
+			
 			public void checkProccess(long days){
 				if(t>=days/100){
 					t2+=1;
@@ -1000,19 +1028,10 @@ public class MainFrame extends JFrame {
 			}
 			@Override
 			protected void done() {
-				show();  // this is run on the Swing event thread
-				getContentPane().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-				calculateLbl.setVisible(false);
-				//gifLabel.setVisible(false);
-				progressBar.setValue(progressBar.getMaximum());
+				end_graphics();
 			}
 
-
-
 			
-
-			
-
 			public void reset(){
 				Main.reset(gears, indicators);
 
